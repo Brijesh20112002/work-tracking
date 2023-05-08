@@ -19,6 +19,16 @@ The system includes features such as task lists, time tracking and project manag
 3) Maintain Data Integrity
 4) Security
 
+# How to run?
+
+1) import this folder into your spring suite tool
+2) chnage the Database configuration and port number according to your machine in the Application.properties file 
+3) Clean & Build the Maven Project 
+4) and type the URL like this : localhost://9003
+   * Note : 9003 is the port number which is define in the Application.properties file 
+
+# screenshots
+
 *** Admin - Login ***
 
 ![login](https://user-images.githubusercontent.com/132871707/236741558-c87835d5-2c1d-439e-ae32-be24f0d3a711.JPG)
