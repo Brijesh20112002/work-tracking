@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.dao.AddMouseClickCount;
@@ -72,7 +71,7 @@ public class EmployeeController {
 		return "JWT/signin";
 	}
 
-	@RequestMapping(value = "/send-otp", method = RequestMethod.POST)
+	@PostMapping("/send-otp")
 	public String sendOTP(Model model, @RequestParam("employeeEmail") String email, HttpSession session) {
 		model.addAttribute("title", "forgot - Contact Manager");
 		Employee employee = addEmployeeRepository.findEmployeeByEmployeeEmail(email);
@@ -99,7 +98,7 @@ public class EmployeeController {
 	}
 
 	@PostMapping("/verify-otp")
-	public String verifyOtp(@RequestParam("otp") Integer otp, @RequestParam("email") String email, HttpSession session,
+	public String verifyOtp(@RequestParam Integer otp, @RequestParam String email, HttpSession session,
 			Model model) {
 		Integer myOtp = (int) session.getAttribute("otp");
 		Employee userByUserName = addEmployeeRepository.getUserByUserName(email);
@@ -148,7 +147,7 @@ public class EmployeeController {
 	}
 
 	@RequestMapping("/startTaskTracker/{employeeId}/{taskId}")
-	public String startTaskTracker(@PathVariable("employeeId") int employeeId, @PathVariable("taskId") int taskId,
+	public String startTaskTracker(@PathVariable int employeeId, @PathVariable int taskId,
 			Model model, Principal principal, HttpSession session) {
 		Integer id = (int) session.getAttribute("id");
 		System.out.println(id);
@@ -160,13 +159,13 @@ public class EmployeeController {
 	}
 
 	@RequestMapping("/stopTaskTracker/{employeeId}/{taskId}")
-	public String stopTaskTracker(@PathVariable("employeeId") int employeeId, @PathVariable("taskId") int taskId,
+	public String stopTaskTracker(@PathVariable int employeeId, @PathVariable int taskId,
 			Model model, Principal principal, HttpSession session) {
 		Integer id = (int) session.getAttribute("id");
 		System.out.println(id);
 		model.addAttribute("title", "Start Task Tracker");
 		long seconds = startTaskTracker.StopTaskTracker(employeeId);
-		Integer taskid = (int) session.getAttribute("taskId");
+		int taskid = (int) session.getAttribute("taskId");
 		TaskLog taskLog = new TaskLog();
 		taskLog.setTaskId(taskId);
 		taskLog.setDuration(seconds);
@@ -191,12 +190,12 @@ public class EmployeeController {
 
 	/*
 	 * @PostMapping("/storeCountKeyPresses")
-	 * 
+	 *
 	 * @ResponseBody public String storeKeyPresses(Model model, Principal
 	 * principal, @RequestParam("keyPresses") Integer keyPresses) { if (keyPresses
 	 * == null || keyPresses <= 0) { return "error"; }
 	 * System.out.println("key count : " + keyPresses);
-	 * 
+	 *
 	 * return "success"; }
 	 */
 

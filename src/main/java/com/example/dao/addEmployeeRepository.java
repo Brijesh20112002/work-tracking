@@ -22,15 +22,15 @@ public interface addEmployeeRepository extends JpaRepository<Employee, Integer>{
 	public Page<Employee> getUser(Pageable  pageable);
 	@Query(value = "select * from employee where employee_role='Project Manager' AND status = 'Not Assign'",nativeQuery = true)
 	public List<Employee> getNotAssignProjectManager();
-	
+
 	public Employee findByEmployeeId(int employeeId);
-	
+
 	public Employee findEmployeeByEmployeeEmail(String employeeEmail);
-	
+
 	@Query(value = "select * from employee where employee_role='Employee'",nativeQuery = true)
 	public List<Employee> getEmployee();
-	
+
 	//@Query("SELECT assignproject FROM AssignProject assignproject JOIN assignproject.Project project WHERE project.projectId = :projectId")
-	
-	
+
+
 }

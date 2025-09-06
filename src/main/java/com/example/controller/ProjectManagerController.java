@@ -3,7 +3,7 @@ package com.example.controller;
 import java.security.Principal;
 import java.util.List;
 
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -28,10 +28,10 @@ public class ProjectManagerController {
 
 	@Autowired
 	private addEmployeeRepository addEmployeeRepository;
-	
+
 	@Autowired
 	private AssignProjectRepository assignProjectRepository;
-	
+
 	@Autowired
 	private addTaskRepository addTaskRepository;
 
@@ -42,7 +42,7 @@ public class ProjectManagerController {
 		model.addAttribute("title", "Project Manager Dashboard - Work Tracking System");
 		return "projectManager/dashboard";
 	}
-	
+
 	@GetMapping("/viewProject")
 	public String viewProject(Model model, HttpSession session) {
 
@@ -53,11 +53,11 @@ public class ProjectManagerController {
 		model.addAttribute("allProject", allProject);
 		return "projectmanager/showProject";
 	}
-	
+
 	@RequestMapping("/showTaskForm/{projectId}")
-	public String showTaskList(@PathVariable("projectId") Integer projectId, Model model,
+	public String showTaskList(@PathVariable Integer projectId, Model model,
 			Principal principal) {
-		
+
 		List<TaskMaster> allTaskListByProjectId = this.addTaskRepository.getAllTaskListByProjectId(projectId);
 		System.out.println(allTaskListByProjectId);
 		model.addAttribute("title", "Show Task List");
@@ -66,32 +66,32 @@ public class ProjectManagerController {
 	}
 
 	@RequestMapping("/assignTaskForm/{taskId}")
-	public String showAssignTaskForm(@PathVariable("taskId") Integer taskId, Model model,
+	public String showAssignTaskForm(@PathVariable Integer taskId, Model model,
 			Principal principal) {
 		model.addAttribute("title", "Assign Task");
-		
+
 		List<Employee> allEmployee = this.addEmployeeRepository.getEmployee();
-		
+
 		TaskMaster taskMaster = this.addTaskRepository.findById(taskId).get();
 		model.addAttribute("task", taskMaster);
 		model.addAttribute("allEmployee", allEmployee);
 
 		return "projectmanager/showAssignTaskForm";
 	}
-	
+
 	@PostMapping("/assignTaskProcess")
-	public String assignTaskrocess(@ModelAttribute TaskMaster taskMaster,@RequestParam("taskId") int taskId,@RequestParam("employeeId") int employeeId,Model model) {
+	public String assignTaskrocess(@ModelAttribute TaskMaster taskMaster,@RequestParam int taskId,@RequestParam int employeeId,Model model) {
 		System.out.println("employee id : " + employeeId);
 		System.out.println("Task id : " + taskId);
 		model.addAttribute("title", "Assign Task");
-		
+
 		TaskMaster findById = this.addTaskRepository.findById(taskId);
 		findById.setAssign_status("Assign");
 		findById.setEmployeeId(employeeId);
-		
+
 		TaskMaster updateTaskStatus = addTaskRepository.save(findById);
 		System.out.println("assign " + updateTaskStatus);
-		
+
 		return "projectmanager/showTaskList";
 	}
 

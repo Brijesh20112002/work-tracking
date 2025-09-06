@@ -4,14 +4,13 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
-import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
+import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -26,7 +25,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -76,7 +74,7 @@ public class HomeController {
 
 	@Autowired
 	private TaskDataRepository taskDataRepository;
-	
+
 	@Autowired
 	private AddMouseClickCount addMouseClickCount;
 
@@ -98,13 +96,13 @@ public class HomeController {
 		Admin userByUserName = this.adminRepository.getUserByUserName(userName);
 		model.addAttribute("admin", userByUserName);
 		model.addAttribute("title", "Dashboard - Work Tracking System");
-		
+
 		TaskLog groupedTodaysTimeTrackedResult = this.taskLogRepository.getGroupedAllTimeTrackedResult();
 		TaskData groupedAllKeyCountResult = taskDataRepository.getGroupedAllKeyCountResult();
 		MouseClick groupedAllMouseClickCountResult = addMouseClickCount.getGroupedAllKeyCountResult();
 		List<TaskLog> groupedResult = this.taskLogRepository.getGroupedTaskWiseResult();
 		List<TaskLog> groupedEmployeeWiseResult = this.taskLogRepository.getGroupedEmployeeWiseResult();
-		
+
 		model.addAttribute("groupedEmployeeWiseResult", groupedEmployeeWiseResult);
 		model.addAttribute("groupedResult", groupedResult);
 		model.addAttribute("groupedTodaysTimeTrackedResult", groupedTodaysTimeTrackedResult);
@@ -161,7 +159,7 @@ public class HomeController {
 	}
 
 	@GetMapping("/showEmployee/{page}")
-	public String showEmployee(@PathVariable("page") Integer page, Model model, Principal principal) {
+	public String showEmployee(@PathVariable Integer page, Model model, Principal principal) {
 
 		String userName = principal.getName();
 		Admin userByAdminName = this.adminRepository.getUserByUserName(userName);
@@ -179,7 +177,7 @@ public class HomeController {
 	}
 
 	@RequestMapping("/updateEmployeeForm/{employeeId}")
-	public String showEmployeeDetails(@PathVariable("employeeId") Integer employeeId, Model model,
+	public String showEmployeeDetails(@PathVariable Integer employeeId, Model model,
 			Principal principal) {
 		String userName = principal.getName();
 		System.out.println("username is : " + userName);
@@ -192,7 +190,7 @@ public class HomeController {
 		return "admin/showEmployeeDetails";
 	}
 
-	@RequestMapping(value = "/employeeUpdateProcess", method = RequestMethod.POST)
+	@PostMapping("/employeeUpdateProcess")
 	public String employeeUpdateProcess(@ModelAttribute Employee employee, Model model, HttpSession session,
 			Principal principal) {
 		try {
@@ -208,7 +206,7 @@ public class HomeController {
 	}
 
 	@GetMapping("/deleteEmployee/{employeeId}")
-	public String deleteEmployee(@PathVariable("employeeId") Integer employeeId, Model model, HttpSession session,
+	public String deleteEmployee(@PathVariable Integer employeeId, Model model, HttpSession session,
 			Principal principal) {
 		Optional<Employee> contactOptional = this.addEmployeeRepository.findById(employeeId);
 		Employee employee = contactOptional.get();
@@ -248,8 +246,8 @@ public class HomeController {
 				} else {
 					project.setProjectfile(file.getOriginalFilename());
 					File UPLOAD_DIR = new ClassPathResource("static/").getFile();
-					Path filePath = Paths
-							.get(UPLOAD_DIR.getAbsolutePath() + File.separator + file.getOriginalFilename());
+					Path filePath = Path
+							.of(UPLOAD_DIR.getAbsolutePath() + File.separator + file.getOriginalFilename());
 					Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 					System.out.println("file upload successfully");
 					project.setStatus("Not Assign");
@@ -280,7 +278,7 @@ public class HomeController {
 	}
 
 	@RequestMapping("/assignProject/{projectId}")
-	public String showAssignProjectForm(@PathVariable("projectId") Integer projectId, Model model,
+	public String showAssignProjectForm(@PathVariable Integer projectId, Model model,
 			Principal principal) {
 		String userName = principal.getName();
 		Admin userByUserName = this.adminRepository.getUserByUserName(userName);
@@ -297,7 +295,7 @@ public class HomeController {
 
 	@PostMapping("/assignProjectProcess")
 	public String assignProjectProcess(@ModelAttribute AssignProject assignProject,
-			@RequestParam("projectId") int projectId, HttpSession session, Model model, BindingResult result,
+			@RequestParam int projectId, HttpSession session, Model model, BindingResult result,
 			Principal principal) {
 		String userName = principal.getName();
 		Admin userByUserName = this.adminRepository.getUserByUserName(userName);
@@ -372,8 +370,8 @@ public class HomeController {
 				} else {
 					taskMaster.setDocumentationPDF(file.getOriginalFilename());
 					File UPLOAD_DIR = new ClassPathResource("static/images/").getFile();
-					Path filePath = Paths
-							.get(UPLOAD_DIR.getAbsolutePath() + File.separator + file.getOriginalFilename());
+					Path filePath = Path
+							.of(UPLOAD_DIR.getAbsolutePath() + File.separator + file.getOriginalFilename());
 					Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 					System.out.println("file upload successfully");
 					taskMaster.setStatus("Pending");
@@ -396,7 +394,7 @@ public class HomeController {
 	}
 
 	@RequestMapping("/showTask/{page}")
-	public String showTask(@PathVariable("page") Integer page, Model model, Principal principal) {
+	public String showTask(@PathVariable Integer page, Model model, Principal principal) {
 		String userName = principal.getName();
 		Admin userByUserName = this.adminRepository.getUserByUserName(userName);
 		model.addAttribute("admin", userByUserName);
@@ -480,7 +478,7 @@ public class HomeController {
 	}
 
 	@RequestMapping("/taskDetails/taskId/{taskId}")
-	public String showTaskDetails(Model model, @PathVariable("taskId") int taskId, Principal principal)
+	public String showTaskDetails(Model model, @PathVariable int taskId, Principal principal)
 			throws IOException {
 		System.out.println(taskId);
 		String userName = principal.getName();
@@ -494,7 +492,7 @@ public class HomeController {
 	}
 
 	@RequestMapping("/showTaskList/{page}")
-	public String showTaskList(@PathVariable("page") Integer page, Model model, Principal principal) {
+	public String showTaskList(@PathVariable Integer page, Model model, Principal principal) {
 		String userName = principal.getName();
 		Admin userByUserName = this.adminRepository.getUserByUserName(userName);
 		model.addAttribute("admin", userByUserName);
@@ -510,22 +508,22 @@ public class HomeController {
 	}
 
 	@RequestMapping("/showCountKeyPresses/taskId/{taskId}")
-	public String showCountKeyPresses(Model model, @PathVariable("taskId") int taskId, Principal principal)
+	public String showCountKeyPresses(Model model, @PathVariable int taskId, Principal principal)
 			throws IOException {
 		System.out.println(taskId);
 		String userName = principal.getName();
 		Admin userByUserName = this.adminRepository.getUserByUserName(userName);
 		model.addAttribute("admin", userByUserName);
 
-		
+
 		List<TaskData> groupedTaskIdWiseCountKeyPresses = taskDataRepository.getGroupedCountKeyPresses(taskId);
-		
+
 		model.addAttribute("taskKeyCountdetails", groupedTaskIdWiseCountKeyPresses);
 		return "admin/keyCountDetails";
 	}
-	
+
 	@RequestMapping("/employeeDetails/employeeId/{employeeId}")
-	public String showemployeeDetails(Model model, @PathVariable("employeeId") int employeeId, Principal principal)
+	public String showemployeeDetails(Model model, @PathVariable int employeeId, Principal principal)
 			throws IOException {
 		System.out.println(employeeId);
 		String userName = principal.getName();
@@ -535,69 +533,69 @@ public class HomeController {
 		model.addAttribute("employee", employee);
 		return "admin/showEmployeeDetails";
 	}
-	
+
 	@RequestMapping("/todaysData")
 	public String todayDataDashboard(Model model, Principal principal) {
 		String userName = principal.getName();
 		Admin userByAdminName = this.adminRepository.getUserByUserName(userName);
 		model.addAttribute("admin", userByAdminName);
-		model.addAttribute("title", "Dashboard");	
+		model.addAttribute("title", "Dashboard");
 		System.out.println("Hello");
 		TaskLog groupedTodaysTimeTrackedResult = this.taskLogRepository.getGroupedTodaysTimeTrackedResult();
 		TaskData  groupedTodayKeyCountResult= taskDataRepository.getGroupedTodayKeyCountResult();
 		MouseClick groupedTodayMouseClickCountResult = addMouseClickCount.getGroupedTodayKeyCountResult();
 		List<TaskLog> groupedTaskWiseTodayResult = this.taskLogRepository.getGroupedTaskWiseTodayResult();
 		List<TaskLog> groupedEmployeeWiseTodayResult = this.taskLogRepository.getGroupedEmployeeWiseTodayResult();
-			
+
 		model.addAttribute("groupedTodaysTimeTrackedResult", groupedTodaysTimeTrackedResult);
 		model.addAttribute("groupedTodayKeyCountResult", groupedTodayKeyCountResult);
 		model.addAttribute("groupedTodayMouseClickCountResult", groupedTodayMouseClickCountResult);
-		model.addAttribute("groupedTaskWiseTodayResult", groupedTaskWiseTodayResult);		
-		model.addAttribute("groupedEmployeeWiseTodayResult", groupedEmployeeWiseTodayResult);	
+		model.addAttribute("groupedTaskWiseTodayResult", groupedTaskWiseTodayResult);
+		model.addAttribute("groupedEmployeeWiseTodayResult", groupedEmployeeWiseTodayResult);
 		return "admin/dashboardTodayData";
 	}
-	
+
 	@RequestMapping("/yesterdayData")
 	public String yesterdayDataDashboard(Model model, Principal principal) {
 		String userName = principal.getName();
 		Admin userByAdminName = this.adminRepository.getUserByUserName(userName);
 		model.addAttribute("admin", userByAdminName);
-		model.addAttribute("title", "Dashboard");	
+		model.addAttribute("title", "Dashboard");
 		System.out.println("Hello");
-		
+
 		TaskLog getGroupedYesterdayTimeTrackedResult = this.taskLogRepository.getGroupedYesterdayTimeTrackedResult();
 		TaskData  getGroupedYesterdayKeyCountResult= taskDataRepository.getGroupedYesterdayKeyCountResult();
 		MouseClick getGroupedYesterdayMouseClickCountResult = addMouseClickCount.getGroupedYesterdayKeyCountResult();
 		List<TaskLog> getGroupedTaskWiseYesterdayResult = this.taskLogRepository.getGroupedTaskWiseYesterdayResult();
 		List<TaskLog> getGroupedEmployeeWiseYesterdayResult = this.taskLogRepository.getGroupedEmployeeWiseYesterdayResult();
-		
+
 		model.addAttribute("getGroupedYesterdayTimeTrackedResult", getGroupedYesterdayTimeTrackedResult);
 		model.addAttribute("getGroupedYesterdayKeyCountResult", getGroupedYesterdayKeyCountResult);
 		model.addAttribute("getGroupedYesterdayMouseClickCountResult", getGroupedYesterdayMouseClickCountResult);
-		model.addAttribute("getGroupedTaskWiseYesterdayResult", getGroupedTaskWiseYesterdayResult);		
-		model.addAttribute("getGroupedEmployeeWiseYesterdayResult", getGroupedEmployeeWiseYesterdayResult);	
+		model.addAttribute("getGroupedTaskWiseYesterdayResult", getGroupedTaskWiseYesterdayResult);
+		model.addAttribute("getGroupedEmployeeWiseYesterdayResult", getGroupedEmployeeWiseYesterdayResult);
 		return "admin/dashboardYesterdayData";
 	}
-	
+
 	@RequestMapping("/lastSevenDaysData")
 	public String lastSevenDaysDashboard(Model model, Principal principal) {
 		String userName = principal.getName();
 		Admin userByAdminName = this.adminRepository.getUserByUserName(userName);
 		model.addAttribute("admin", userByAdminName);
-		model.addAttribute("title", "Dashboard");	
+		model.addAttribute("title", "Dashboard");
 		System.out.println("Hello");
-		
+
 		TaskLog getGroupedLastSevenDaysTimeTrackedResult = this.taskLogRepository.getGroupedLastSevenDaysTimeTrackedResult();
 		TaskData  getGroupedLastSevenDaysKeyCountResult= taskDataRepository.getGroupedLastSevenDaysKeyCountResult();
 		MouseClick getGroupedLastSevenDaysMouseClickCountResult = addMouseClickCount.getGroupedLastSevenDaysKeyCountResult();
 		List<TaskLog> getGroupedTaskWiseYesterdayResult = this.taskLogRepository.getGroupedTaskWiseLastSevenDaysResult();
 		List<TaskLog> getGroupedEmployeeWiseLastSevenDaysResult = this.taskLogRepository.getGroupedEmployeeWiseLastSevenDaysResult();
-		
+
 		model.addAttribute("getGroupedLastSevenDaysTimeTrackedResult", getGroupedLastSevenDaysTimeTrackedResult);
 		model.addAttribute("getGroupedLastSevenDaysKeyCountResult", getGroupedLastSevenDaysKeyCountResult);
 		model.addAttribute("getGroupedLastSevenDaysMouseClickCountResult", getGroupedLastSevenDaysMouseClickCountResult);
-		model.addAttribute("getGroupedTaskWiseYesterdayResult", getGroupedTaskWiseYesterdayResult);		
-		model.addAttribute("getGroupedEmployeeWiseLastSevenDaysResult", getGroupedEmployeeWiseLastSevenDaysResult);	
+		model.addAttribute("getGroupedTaskWiseYesterdayResult", getGroupedTaskWiseYesterdayResult);
+		model.addAttribute("getGroupedEmployeeWiseLastSevenDaysResult", getGroupedEmployeeWiseLastSevenDaysResult);
 		return "admin/lastSevenDaysDashboard";
 	}
 }

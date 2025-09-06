@@ -19,7 +19,7 @@ public class CustomeAdminDetailsServiceImplementataion implements UserDetailsSer
 		{
 			throw new UsernameNotFoundException("Could not found user.");
 		}
-		
+
 		CustomeAdminDetails customeAdminDetails = new CustomeAdminDetails(userByUserName);
 		return customeAdminDetails;
 	}

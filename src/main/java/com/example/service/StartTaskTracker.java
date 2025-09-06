@@ -28,10 +28,10 @@ public class StartTaskTracker {
 	private LocalDateTime startTime;
 
 	public long second;
-	
+
 	@Autowired
 	private AddTimeIntervalRepository addTimeIntervalRepository;
-	
+
 	public long fetchTime()
 	{
 		DateTimeFormatter currentDateFormate = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -39,7 +39,7 @@ public class StartTaskTracker {
 		String Date = currentDateFormate.format(getDate);
 		TimeInterval timeByDate = addTimeIntervalRepository.getTimeByDate(Date);
 		int duration = timeByDate.getTime();
-		
+
 		second = duration * 60000L;
 		return second;
 	}
@@ -69,7 +69,7 @@ public class StartTaskTracker {
 				try {
 					Robot r = new Robot();
 					String fileDirectory = "E://TimeTracker//" + year + "//" + employeId + "//" + currentDate;
-					
+
 					File directory = new File(fileDirectory);
 					if (!directory.exists()) {
 						directory.mkdirs();
@@ -105,7 +105,7 @@ public class StartTaskTracker {
 				}
 			}
 		}, 21600000);
-		
+
 		return "capturing_started";
 	}
 
@@ -128,7 +128,7 @@ public class StartTaskTracker {
         long minutes = duration.toMinutes();
         long hours = duration.toHours();
         startTime = null;
-        System.out.println(duration); 
+        System.out.println(duration);
         //long ConvertTimeToseconds = minutes*60000L;
         //long ConvertHourToseconds = hours*3600000L;
         //long totalSecond = ConvertTimeToseconds+ConvertHourToseconds+seconds;
